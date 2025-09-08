@@ -1,21 +1,21 @@
 import numpy as np
 import random
 
-# === Parameters ===
+
 NUM_CITIES = 5
 NUM_ANTS = 20
 NUM_ITERATIONS = 100
-ALPHA = 1.0       # pheromone importance
-BETA = 5.0        # heuristic importance
-RHO = 0.5         # evaporation rate
-Q = 100           # pheromone deposit factor
+ALPHA = 1.0       
+BETA = 5.0        
+RHO = 0.5         
+Q = 100           
 
-# === Generate Random Cities ===
+
 cities = np.random.rand(NUM_CITIES, 2)
 distance_matrix = np.linalg.norm(cities[:, None] - cities, axis=2)
 pheromone_matrix = np.ones((NUM_CITIES, NUM_CITIES))
 
-# === Helper Functions ===
+
 def calculate_probabilities(current_city, visited):
     probabilities = []
     for next_city in range(NUM_CITIES):
@@ -40,7 +40,7 @@ def construct_tour():
 def compute_tour_length(tour):
     return sum(distance_matrix[tour[i]][tour[(i + 1) % NUM_CITIES]] for i in range(NUM_CITIES))
 
-# === Main ACO Loop ===
+
 best_tour = None
 best_length = float('inf')
 
@@ -56,17 +56,18 @@ for iteration in range(NUM_ITERATIONS):
             best_tour = tour
             best_length = length
 
-    # Evaporate pheromones
+    
     pheromone_matrix *= (1 - RHO)
 
-    # Deposit new pheromones
+    
     for tour, length in all_tours:
         for i in range(NUM_CITIES):
             a, b = tour[i], tour[(i + 1) % NUM_CITIES]
             pheromone_matrix[a][b] += Q / length
             pheromone_matrix[b][a] += Q / length  # symmetric TSP
 
-# === Output Clean Results ===
+
 clean_tour = [int(city) for city in best_tour]
 print("Best tour:", clean_tour)
+
 print("Best length:", round(best_length, 4))
